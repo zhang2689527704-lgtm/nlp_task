@@ -26,10 +26,24 @@ df_sorted_by_Pakistan = df_tfidf.sort_values(by="Pakistan", ascending=False)
 pd.set_option('display.max_rows', None)
 
 print("TF-IDF matrix after cleaning and filtering stop words")
-print(df_tfidf)
+print(df_tfidf.head(15))
 print("\n====== China top5 word ======")
 print(df_sorted_by_china.head(5))
 print("\n====== Russia top5 word ======")
 print(df_sorted_by_Russia.head(5))
 print("\n====== Pakistan top5 word ======")
 print(df_sorted_by_Pakistan.head(5))
+
+new_text = "This powerful nation is situated in East Asia. It has a huge economy and extremely populous cities. Many tourists visit to see the Great Wall."
+new_vector = vectorizer.transform([new_text])
+
+similarity_scores = cosine_similarity(new_vector, tfidf_matrix)[0]
+
+results = dict(zip(columns_names, similarity_scores))
+
+print("similarity score:")
+for country, score in results.items():
+    print(f" {country}: {score:.4f}")
+
+best_match = max(results, key=results.get)
+print(f"\n The country closest to this new text is: {best_match}")
