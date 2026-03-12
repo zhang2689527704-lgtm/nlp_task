@@ -25,16 +25,16 @@ df_sorted_by_Russia = df_tfidf.sort_values(by="Russia", ascending=False)
 df_sorted_by_Pakistan = df_tfidf.sort_values(by="Pakistan", ascending=False)
 pd.set_option('display.max_rows', None)
 
-print("TF-IDF matrix after cleaning and filtering stop words")
-print(df_tfidf.head(15))
-print("\n====== China top5 word ======")
-print(df_sorted_by_china.head(5))
-print("\n====== Russia top5 word ======")
-print(df_sorted_by_Russia.head(5))
-print("\n====== Pakistan top5 word ======")
-print(df_sorted_by_Pakistan.head(5))
+# print("TF-IDF matrix after cleaning and filtering stop words")
+# print(df_tfidf.head(15))
+# print("\n====== China top5 word ======")
+# print(df_sorted_by_china.head(5))
+# print("\n====== Russia top5 word ======")
+# print(df_sorted_by_Russia.head(5))
+# print("\n====== Pakistan top5 word ======")
+# print(df_sorted_by_Pakistan.head(5))
 
-new_text = "This powerful nation is situated in East Asia. It has a huge economy and extremely populous cities. Many tourists visit to see the Great Wall."
+new_text = "This colossal nation spans two different continents, making it a bridge between distinct cultural spheres. Because of its sheer size, traveling from its western borders to its eastern shores means passing through multiple time zones. The natural environment is notoriously harsh, featuring vast, freezing plains and endless stretches of dense, needle-leaf forests. Historically, it has transitioned through powerful imperial eras and a major twentieth-century ideological union, leaving a complex legacy. Today, its global influence is heavily sustained by the extraction and exportation of immense underground energy reserves, particularly fossil fuels, which lie hidden beneath its freezing terrain."
 new_vector = vectorizer.transform([new_text])
 
 similarity_scores = cosine_similarity(new_vector, tfidf_matrix)[0]
@@ -44,6 +44,32 @@ results = dict(zip(columns_names, similarity_scores))
 print("similarity score:")
 for country, score in results.items():
     print(f" {country}: {score:.4f}")
+
+best_match = max(results, key=results.get)
+print(f"\n The country closest to this new text is: {best_match}")
+
+new_text_nonzero_indices = new_vector.nonzero()[1]
+
+russia_index = columns_names.index("Russia")
+russia_vector = tfidf_matrix[russia_index]
+russia_nonzero_indices = russia_vector.nonzero()[1]
+
+shared_indices = np.intersect1d(new_text_nonzero_indices, russia_nonzero_indices)
+
+evidence_data = []
+for idx in shared_indices:
+    word = feature_names[idx]
+    weight_in_new = new_vector[0, idx]
+    weight_in_russia = russia_vector[0, idx]
+    evidence_data.append({
+        "Matched resonance words": word,
+        "Weight in new text": round(weight_in_new, 4),
+        "Weight in the original Russian text": round(weight_in_russia, 4)
+    })
+
+df_evidence = pd.DataFrame(evidence_data).sort_values(by="Weight in the original Russian text", ascending=False)
+print(df_evidence.to_string(index=False))
+
 
 best_match = max(results, key=results.get)
 print(f"\n The country closest to this new text is: {best_match}")
