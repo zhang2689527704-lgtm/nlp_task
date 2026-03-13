@@ -1,5 +1,7 @@
 import pandas as pd
+import numpy as np 
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 raw_corpus = {
     "China": "China, officially the People's Republic of China (PRC), is a vast country located in East Asia. It is the world's second-most populous country, with a population exceeding 1.4 billion. Beijing is the national capital, while Shanghai is the most populous city and largest financial center. China's landscape is vast and diverse, ranging from the Gobi and Taklamakan Deserts in the arid north to the subtropical forests in the wetter south. The Yangtze and Yellow Rivers, the third- and sixth-longest in the world, respectively, flow from the Tibetan Plateau to the densely populated eastern seaboard. China is a unitary one-party socialist republic and is recognized as a major global power, boasting the world's second-largest economy by nominal GDP. The Great Wall of China is one of its most famous historical landmarks.",
