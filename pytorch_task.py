@@ -89,29 +89,7 @@ if __name__ == "__main__":
         print(f" One-Hot :")
         print(name_tensor)
 
-# output:
-# data index：
-#   [0] Arabic: 2000 names
-#   [1] Chinese: 268 names
-#   [2] Czech: 519 names
-#   [3] Dutch: 297 names
-#   [4] English: 3668 names
-#   [5] French: 277 names
-#   [6] German: 724 names
-#   [7] Greek: 203 names
-#   [8] Irish: 232 names
-#   [9] Italian: 709 names
-#   [10] Japanese: 991 names
-#   [11] Korean: 94 names
-#   [12] Polish: 139 names
-#   [13] Portuguese: 74 names
-#   [14] Russian: 9408 names
-#   [15] Scottish: 100 names
-#   [16] Spanish: 298 names
-#   [17] Vietnamese: 73 names
-# Test name: Khoury
-# Name Tensor Shape: torch.Size([6, 53])
-# Country vector: tensor([1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.])
+
 # Country Index: 0
 # Country: Arabic
 
