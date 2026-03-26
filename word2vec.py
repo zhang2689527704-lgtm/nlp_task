@@ -69,8 +69,6 @@ try:
         print(f"  {word:15s} → Similarity: {similarity:.4f}")
 except KeyError:
     print("Error: The word 'travel' was not found in the corpus")
-print("'travel' word vector (first 20 dimensions):")
-print(model.wv["travel"][:20])
-
+    
 print("'travel' word vector (first 20 dimensions):")
 print(model.wv["travel"][:20])
