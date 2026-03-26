@@ -1,0 +1,74 @@
+import string
+import nltk
+from nltk.tokenize import word_tokenize, sent_tokenize
+from nltk.corpus import stopwords
+from gensim.models import Word2Vec
+
+# Download NLTK Dependencies
+nltk.download('punkt')
+nltk.download('stopwords')
+
+new_text = """
+The Transformative Power of Travel
+
+Travel is a journey that extends far beyond the mere movement from one geographical location to another; it is a profound immersion into the diverse tapestry of human experience, culture, and nature. When we travel, we step outside the familiar boundaries of our daily lives and open ourselves to a world of new perspectives, ideas, and ways of being.
+
+One of the most compelling reasons to travel is to experience different cultures. Every country, every region, and every community has its own unique traditions, customs, languages, and cuisines that tell the story of its history and people. Traveling allows us to taste authentic dishes prepared with local ingredients, listen to music that resonates with the soul of a place, and participate in festivals that celebrate the shared values of a community. Whether it's savoring pasta in a small trattoria in Rome, dancing to the rhythm of samba during Carnival in Rio de Janeiro, or learning the art of tea ceremony in Kyoto, these cultural experiences leave an indelible mark on our hearts and minds.
+
+In addition to cultural immersion, travel also provides us with the opportunity to connect with nature in its purest form. From the majestic peaks of the Himalayas to the pristine beaches of the Maldives, from the vast savannas of the Serengeti to the lush rainforests of the Amazon, the natural world is a source of endless wonder and inspiration. When we travel to these natural wonders, we are reminded of the beauty and fragility of our planet, and we develop a deeper appreciation for the need to protect and preserve it. Hiking through a mountain trail, snorkeling in a coral reef, or simply sitting by a tranquil lake and watching the sunset can be a deeply meditative and rejuvenating experience that helps us reconnect with our inner selves.
+
+Travel also has the power to challenge our assumptions and broaden our horizons. When we encounter people who have different beliefs, values, and ways of life, we are forced to question our own preconceived notions and see the world through a different lens. This exposure to diversity helps us develop empathy, tolerance, and understanding, and it makes us more open-minded and accepting of others. Whether we are navigating the bustling streets of a megacity like Tokyo or exploring the remote villages of the Andes, every interaction we have while traveling teaches us something new about the world and about ourselves.
+
+Furthermore, travel can be a great source of adventure and personal growth. Stepping outside our comfort zones and facing new challenges, whether it's trying a new activity like rock climbing or scuba diving, or simply navigating a foreign city where we don't speak the language, helps us build confidence, resilience, and problem-solving skills. These experiences not only make our travels more exciting and memorable but also help us grow as individuals, enabling us to face the challenges of life with greater courage and determination.
+
+In today's interconnected world, travel has become more accessible than ever before. With the advent of low-cost airlines, online booking platforms, and advanced communication technologies, it is now easier to explore the farthest corners of the globe. However, it is important to remember that travel is not just about checking off a list of destinations or taking photos for social media; it is about the journey itself, the experiences we have, the people we meet, and the memories we create along the way.
+
+Whether we are embarking on a solo backpacking trip through Southeast Asia, a romantic getaway to a tropical island, a family vacation to a theme park, or a cultural tour of Europe, every travel experience has the potential to transform us in ways we never imagined. It can inspire us to see the world differently, to pursue our passions, and to live life to the fullest. So, pack your bags, step out the door, and let the journey begin. The world is waiting to be explored, and you never know what amazing adventures and discoveries await you on the road ahead.
+"""
+
+def preprocess_text(text):
+    raw_sentences = sent_tokenize(text)
+    
+    processed_sentences = []
+    stop_words = set(stopwords.words('english'))
+    
+    for sent in raw_sentences:
+        sent = sent.lower() 
+        sent = sent.translate(str.maketrans('', '', string.punctuation))
+        tokens = word_tokenize(sent) 
+        
+        filtered_tokens = [
+            token for token in tokens 
+            if token not in stop_words and token.strip()
+        ]
+        
+        if filtered_tokens:
+            processed_sentences.append(filtered_tokens)
+            
+    return processed_sentences
+
+processed_sentences = preprocess_text(new_text)
+print(f"Preprocessing complete, a total of {len(processed_sentences)} training sentences were generated")
+print(f"Example sentence: {processed_sentences[0] if processed_sentences else 'None'}\n")
+
+model = Word2Vec(
+    sentences=processed_sentences,
+    vector_size=100,
+    window=5,
+    min_count=1, 
+    sg=1,        
+    negative=5,
+    epochs=300   
+)
+
+print("Words most similar to 'travel':")
+
+try:
+    similar_words = model.wv.most_similar("travel", topn=10)
+    for word, similarity in similar_words:
+        print(f"  {word:15s} → Similarity: {similarity:.4f}")
+except KeyError:
+    print("Error: The word 'travel' was not found in the corpus")
+
+print("'travel' word vector (first 20 dimensions):")
+print(model.wv["travel"][:20])
