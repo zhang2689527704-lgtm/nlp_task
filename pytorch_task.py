@@ -90,6 +90,4 @@ if __name__ == "__main__":
         print(name_tensor)
 
 
-# Country Index: 0
-# Country: Arabic
-
+# Country: Arab
